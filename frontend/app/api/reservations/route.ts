@@ -1,22 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-type LeadStatus = 'pending' | 'confirmed' | 'cancelled';
-type Lead = {
-  _id: string;
-  name: string;
-  phone: string;
-  email?: string;
-  guests?: number;
-  date?: string;
-  time?: string;
-  message?: string;
-  status: LeadStatus;
-  createdAt: string;
-  updatedAt: string;
-};
-
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'local-admin-token';
-const leads: Lead[] = [];
+import { ADMIN_TOKEN, leads, Lead } from './store';
 
 export async function POST(request: NextRequest) {
   try {

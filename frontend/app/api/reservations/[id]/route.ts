@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-
-// Reuse the same in-memory array defined in the sibling route
 import { ADMIN_TOKEN, leads } from '../store';
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
