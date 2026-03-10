@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Manrope', ...fontFamily.sans],
-        display: ['Playfair Display', ...fontFamily.serif]
+        sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', ...fontFamily.sans],
+        display: ['"Times New Roman"', 'Georgia', ...fontFamily.serif]
       },
       colors: {
         background: '#0c0c0f',

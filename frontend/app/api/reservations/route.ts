@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { randomUUID } from 'crypto';
+import { NextRequest, NextResponse } from 'next/server';
 
-interface Lead {
+type LeadStatus = 'pending' | 'confirmed' | 'cancelled';
+type Lead = {
   _id: string;
   name: string;
   phone: string;
@@ -10,17 +10,15 @@ interface Lead {
   date?: string;
   time?: string;
   message?: string;
-  status: 'pending' | 'confirmed' | 'cancelled';
+  status: LeadStatus;
   createdAt: string;
   updatedAt: string;
-}
+};
 
-// Shared in-memory store survives route re-imports during dev
-const globalStore = globalThis as typeof globalThis & { __br02_leads?: Lead[] };
-export const leads: Lead[] = globalStore.__br02_leads || (globalStore.__br02_leads = []);
-export const ADMIN_TOKEN = 'local-admin-token';
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'local-admin-token';
+const leads: Lead[] = [];
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     if (!body.name || !body.phone) {
@@ -28,7 +26,7 @@ export async function POST(request: Request) {
     }
     const now = new Date().toISOString();
     const lead: Lead = {
-      _id: randomUUID(),
+      _id: crypto.randomUUID(),
       name: body.name,
       phone: body.phone,
       email: body.email,
@@ -47,7 +45,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const token = request.headers.get('authorization')?.replace('Bearer ', '');
   if (token !== ADMIN_TOKEN) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
